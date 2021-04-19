@@ -7,6 +7,9 @@ filename = '/mnt/c/Users/abstr/Dropbox/myQuant/CTA/FundReport.xlsx'
 def make():
     df = pd.read_excel(filename, sheet_name = '样本外周度', names = ['date', 'net_value'],
                     header=1)
+    df = df.loc[df['date']>'2020-01-01']
+    df.index = range(len(df))
+    df['net_value'] = df['net_value']/df['net_value'].iloc[0]
     df['net_value'] = [round(float(a), 3) for a in df['net_value']]
     weeklyReturn = []
     for i in range(1, len(df)):
