@@ -3,7 +3,7 @@ import sys
 import os
 import numpy as np
 
-filename = '/mnt/c/Users/abstr/Dropbox/myQuant/CTA/FundReport.xlsx'
+filename = '/mnt/c/Users/yeshi/Documents/WPS Cloud Files/592018501/fundreport.xlsx'
 def make():
     df = pd.read_excel(filename, sheet_name = '样本外周度', names = ['date', 'net_value'],
                     header=1)
