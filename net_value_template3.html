@@ -105,7 +105,7 @@
 			 option = null;
 			 option = {
 				 title: {
-					 text: '量化CTA业绩曲线，年初以来: YTD'
+					 text: '量化CTA一号业绩曲线，成立以来: YTD'
 				 },
 				 tooltip: {
 					 trigger: 'axis'
@@ -140,7 +140,8 @@
 						 stack: '总量',
 						 data: net_value_pos
 					 }
-				 ]
+				 ],
+				 color:['#FE8463', 'red', 'green']
 			 };
 			 ;
 			 if (option && typeof option === "object") {
@@ -194,6 +195,7 @@
 				 type: 'value',
 				 min: -15
 			 },
+			 color:['#FE8463', 'red', 'green'],
 			 series: [
 				 {
 					 name: '回撤',
