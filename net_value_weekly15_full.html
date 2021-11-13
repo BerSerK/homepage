@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+	<head>
+		<!-- Mobile Specific Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Favicon-->
+		<link rel="shortcut icon" href="img/fav.png">
+		<!-- Author Meta -->
+		<meta name="author" content="Colorlib">
+		<!-- Meta Description -->
+		<meta name="description" content="叶时炜的CTA策略净值">
+		<!-- Meta Keyword -->
+		<meta name="keywords" content="CTA策略">
+		<!-- meta character set -->
+		<meta charset="UTF-8">
+		<!-- Site Title -->
+		<title>叶时炜的CTA策略净值曲线</title>
+		<link href="https://fonts.googleapis.com/css?family=Poppins:300,500,600" rel="stylesheet">
+		<!--
+		CSS
+		============================================= -->
+		<link rel="stylesheet" href="css/linearicons.css">
+		<link rel="stylesheet" href="css/owl.carousel.css">
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/nice-select.css">
+		<link rel="stylesheet" href="css/magnific-popup.css">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/main.css">
+		<style type="text/css">
+			.mobileShow {display: none;}
+		  
+			/* Smartphone Portrait and Landscape */
+			@media only screen
+			  and (min-device-width : 320px)
+			  and (max-device-width : 480px){ 
+				.mobileShow {display: inline;}
+			}
+		  </style>
+	</head>
+	<body>
+	<div class="oz-body-wrap">
+		<!-- Start Header Area -->
+		<header class="default-header">
+			<div class="container-fluid">
+				<div class="header-wrap">
+					<div class="header-top d-flex justify-content-between align-items-center">
+						<div class="logo">
+							<a href="index.html"><img src="img/avatar_1.png" alt=""></a>
+						</div>
+						<div class="main-menubar d-flex align-items-center">
+							<nav class="hide">
+								<a href="http://notes.yeshiwei.com">笔记</a>
+								<a href="http://blog.yeshiwei.com">博客</a>
+								<a href="http://www.yeshiwei.com/fangjia/">房价跟踪</a>
+								<a href="http://quant.yeshiwei.com">机器学习与量化交易论坛</a>
+							</nav>
+							<div class="menu-bar"><span class="lnr lnr-menu"></span></div>
+						</div>
+						
+					</div>
+					
+				</div>
+			</div>
+		</header>
+		<!-- End Header Area -->
+		
+		<!-- Start about Area -->
+		<!-- section class="about-area pt-100 pb-100">
+			<div class="container">
+				<div class="row align-items-center">
+					
+					<div class="col-lg-6">
+						<div class="story-content">
+							<h3>微信扫码关注<span>时炜观察</span></h3>
+							<p class="mt-30">
+								基于模型与数据分享我的知识与观点。关注还可以获取房价爬虫与分析源码。<br>
+							</p>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<img class="img-fluid d-flex mx-auto" src="img/qrcode_for_gh.jpg" alt="">
+					</div>
+					
+				</div>
+			</div>
+		</section -->
+		<!-- End Team Force Area -->
+	
+		<!-- Start Align Area -->
+		<div class="white-bg">
+		    <div class="container border-top-generic">
+					<div id="netvalue_container" style="height: 360px"></div>
+					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+				  
+					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+					<script type="text/javascript">
+			 var dom = document.getElementById("netvalue_container");
+			 var myChart = echarts.init(dom);
+			 var app = {};
+			 option = null;
+			 option = {
+				 title: {
+					 text: '量化CTA业绩曲线，年初以来: 15.89%'
+				 },
+				 tooltip: {
+					 trigger: 'axis'
+				 },
+				 legend: {
+					 data: ['净值曲线']
+				 },
+				 grid: {
+					 left: '3%',
+					 right: '4%',
+					 bottom: '3%',
+					 containLabel: true
+				 },
+				 toolbox: {
+					 feature: {
+						 saveAsImage: {}
+					 }
+				 },
+				 xAxis: {
+					 type: 'category',
+					 boundaryGap: false,
+					 data: ['2018-01-12', '2018-01-19', '2018-01-26', '2018-02-02', '2018-02-09', '2018-02-16', '2018-02-23', '2018-03-02', '2018-03-09', '2018-03-16', '2018-03-23', '2018-03-30', '2018-04-06', '2018-04-13', '2018-04-20', '2018-04-27', '2018-05-04', '2018-05-11', '2018-05-18', '2018-05-25', '2018-06-01', '2018-06-08', '2018-06-15', '2018-06-22', '2018-06-29', '2018-07-06', '2018-07-13', '2018-07-20', '2018-07-27', '2018-08-03', '2018-08-10', '2018-08-17', '2018-08-24', '2018-08-31', '2018-09-07', '2018-09-14', '2018-09-21', '2018-09-28', '2018-10-05', '2018-10-12', '2018-10-19', '2018-10-26', '2018-11-02', '2018-11-09', '2018-11-16', '2018-11-23', '2018-11-30', '2018-12-07', '2018-12-14', '2018-12-21', '2018-12-28', '2019-01-04', '2019-01-11', '2019-01-18', '2019-01-25', '2019-02-01', '2019-02-08', '2019-02-15', '2019-02-22', '2019-03-01', '2019-03-08', '2019-03-15', '2019-03-22', '2019-03-29', '2019-04-05', '2019-04-12', '2019-04-19', '2019-04-26', '2019-05-03', '2019-05-10', '2019-05-17', '2019-05-24', '2019-05-31', '2019-06-07', '2019-06-14', '2019-06-21', '2019-06-28', '2019-07-05', '2019-07-12', '2019-07-19', '2019-07-26', '2019-08-02', '2019-08-09', '2019-08-16', '2019-08-23', '2019-08-30', '2019-09-06', '2019-09-13', '2019-09-20', '2019-09-27', '2019-10-04', '2019-10-11', '2019-10-18', '2019-10-25', '2019-11-01', '2019-11-08', '2019-11-15', '2019-11-22', '2019-11-29', '2019-12-06', '2019-12-13', '2019-12-20', '2019-12-27', '2020-01-03', '2020-01-10', '2020-01-17', '2020-01-24', '2020-01-31', '2020-02-07', '2020-02-14', '2020-02-21', '2020-02-28', '2020-03-06', '2020-03-13', '2020-03-20', '2020-03-27', '2020-04-03', '2020-04-10', '2020-04-17', '2020-04-24', '2020-04-30', '2020-05-08', '2020-05-15', '2020-05-22', '2020-05-29', '2020-06-05', '2020-06-12', '2020-06-19', '2020-06-24', '2020-07-03', '2020-07-10', '2020-07-17', '2020-07-24', '2020-07-31', '2020-08-07', '2020-08-14', '2020-08-21', '2020-08-28', '2020-09-04', '2020-09-11', '2020-09-18', '2020-09-25', '2020-10-02', '2020-10-09', '2020-10-16', '2020-10-23', '2020-10-30', '2020-11-06', '2020-11-13', '2020-11-20', '2020-11-27', '2020-12-04', '2020-12-11', '2020-12-18', '2020-12-25', '2021-01-08', '2021-01-15', '2021-01-22', '2021-01-29', '2021-02-05', '2021-02-10', '2021-02-19', '2021-02-26', '2021-03-05', '2021-03-12', '2021-03-19', '2021-03-26', '2021-04-02', '2021-04-09', '2021-04-16', '2021-04-23', '2021-04-30', '2021-05-07', '2021-05-14', '2021-05-21', '2021-05-28', '2021-06-04', '2021-06-11', '2021-06-18', '2021-06-25', '2021-07-02', '2021-07-09', '2021-07-16', '2021-07-23', '2021-07-30', '2021-08-06', '2021-08-13', '2021-08-20', '2021-08-27', '2021-09-03', '2021-09-10', '2021-09-17', '2021-09-24', '2021-09-30', '2021-10-08', '2021-10-15', '2021-10-22', '2021-10-29', '2021-11-05', '2021-11-12'] 
+				},
+				 yAxis: {
+					 type: 'value',
+					 min: 0.95
+				 },
+				 series: [
+					 {
+						 name: '净值',
+						 type: 'line',
+						 stack: '总量',
+						 data: [1.0, 1.018, 1.011, 1.027, 1.025, 1.021, 1.005, 1.002, 1.005, 0.995, 1.005, 1.028, 1.021, 1.019, 1.01, 1.021, 1.018, 1.011, 1.002, 0.997, 1.005, 1.026, 1.032, 1.038, 1.038, 1.028, 1.056, 1.048, 1.055, 1.08, 1.071, 1.112, 1.108, 1.099, 1.102, 1.088, 1.101, 1.102, 1.102, 1.123, 1.107, 1.11, 1.102, 1.096, 1.113, 1.107, 1.101, 1.149, 1.158, 1.132, 1.146, 1.117, 1.119, 1.126, 1.114, 1.113, 1.113, 1.1, 1.107, 1.1, 1.079, 1.076, 1.072, 1.095, 1.108, 1.131, 1.119, 1.131, 1.152, 1.14, 1.141, 1.154, 1.149, 1.139, 1.142, 1.131, 1.153, 1.174, 1.183, 1.177, 1.153, 1.146, 1.117, 1.133, 1.14, 1.108, 1.106, 1.108, 1.081, 1.075, 1.08, 1.072, 1.043, 1.056, 1.037, 1.043, 1.047, 1.067, 1.087, 1.065, 1.081, 1.097, 1.086, 1.082, 1.092, 1.092, 1.089, 1.089, 1.051, 1.056, 1.044, 1.083, 1.073, 1.111, 1.161, 1.199, 1.177, 1.164, 1.157, 1.144, 1.137, 1.152, 1.157, 1.175, 1.182, 1.191, 1.197, 1.21, 1.212, 1.193, 1.209, 1.209, 1.209, 1.207, 1.178, 1.184, 1.182, 1.184, 1.176, 1.189, 1.189, 1.189, 1.189, 1.189, 1.212, 1.223, 1.228, 1.253, 1.287, 1.317, 1.342, 1.34, 1.381, 1.396, 1.391, 1.385, 1.365, 1.362, 1.358, 1.373, 1.388, 1.441, 1.466, 1.464, 1.46, 1.44, 1.433, 1.442, 1.45, 1.469, 1.478, 1.48, 1.53, 1.527, 1.509, 1.503, 1.506, 1.521, 1.476, 1.494, 1.512, 1.508, 1.545, 1.54, 1.56, 1.535, 1.544, 1.506, 1.529, 1.576, 1.606, 1.606, 1.644, 1.669, 1.707, 1.699, 1.654, 1.618, 1.591, 1.612]
+					 }
+				 ]
+			 };
+			 ;
+			 if (option && typeof option === "object") {
+				 myChart.setOption(option, true);
+			 }
+					</script>
+			</div>
+		
+			<div class="container border-top-generic">
+		        
+				<div id="drawdown_container" style="height: 200px"></div>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+				<script type="text/javascript">
+		 var dom = document.getElementById("drawdown_container");
+		 var myChart = echarts.init(dom);
+		 var app = {};
+		 option = null;
+		 option = {
+			 title: {
+				 text: '策略回撤'
+			 },
+			 tooltip: {
+				 trigger: 'axis'
+			 },
+			 legend: {
+				 data: ['回撤百分比']
+			 },
+			 grid: {
+				 left: '3%',
+				 right: '4%',
+				 bottom: '3%',
+				 containLabel: true
+			 },
+			 toolbox: {
+				 feature: {
+					 saveAsImage: {}
+				 }
+			 },
+			 xAxis: {
+				 type: 'category',
+				 boundaryGap: false,
+				 data: ['2018-01-12', '2018-01-19', '2018-01-26', '2018-02-02', '2018-02-09', '2018-02-16', '2018-02-23', '2018-03-02', '2018-03-09', '2018-03-16', '2018-03-23', '2018-03-30', '2018-04-06', '2018-04-13', '2018-04-20', '2018-04-27', '2018-05-04', '2018-05-11', '2018-05-18', '2018-05-25', '2018-06-01', '2018-06-08', '2018-06-15', '2018-06-22', '2018-06-29', '2018-07-06', '2018-07-13', '2018-07-20', '2018-07-27', '2018-08-03', '2018-08-10', '2018-08-17', '2018-08-24', '2018-08-31', '2018-09-07', '2018-09-14', '2018-09-21', '2018-09-28', '2018-10-05', '2018-10-12', '2018-10-19', '2018-10-26', '2018-11-02', '2018-11-09', '2018-11-16', '2018-11-23', '2018-11-30', '2018-12-07', '2018-12-14', '2018-12-21', '2018-12-28', '2019-01-04', '2019-01-11', '2019-01-18', '2019-01-25', '2019-02-01', '2019-02-08', '2019-02-15', '2019-02-22', '2019-03-01', '2019-03-08', '2019-03-15', '2019-03-22', '2019-03-29', '2019-04-05', '2019-04-12', '2019-04-19', '2019-04-26', '2019-05-03', '2019-05-10', '2019-05-17', '2019-05-24', '2019-05-31', '2019-06-07', '2019-06-14', '2019-06-21', '2019-06-28', '2019-07-05', '2019-07-12', '2019-07-19', '2019-07-26', '2019-08-02', '2019-08-09', '2019-08-16', '2019-08-23', '2019-08-30', '2019-09-06', '2019-09-13', '2019-09-20', '2019-09-27', '2019-10-04', '2019-10-11', '2019-10-18', '2019-10-25', '2019-11-01', '2019-11-08', '2019-11-15', '2019-11-22', '2019-11-29', '2019-12-06', '2019-12-13', '2019-12-20', '2019-12-27', '2020-01-03', '2020-01-10', '2020-01-17', '2020-01-24', '2020-01-31', '2020-02-07', '2020-02-14', '2020-02-21', '2020-02-28', '2020-03-06', '2020-03-13', '2020-03-20', '2020-03-27', '2020-04-03', '2020-04-10', '2020-04-17', '2020-04-24', '2020-04-30', '2020-05-08', '2020-05-15', '2020-05-22', '2020-05-29', '2020-06-05', '2020-06-12', '2020-06-19', '2020-06-24', '2020-07-03', '2020-07-10', '2020-07-17', '2020-07-24', '2020-07-31', '2020-08-07', '2020-08-14', '2020-08-21', '2020-08-28', '2020-09-04', '2020-09-11', '2020-09-18', '2020-09-25', '2020-10-02', '2020-10-09', '2020-10-16', '2020-10-23', '2020-10-30', '2020-11-06', '2020-11-13', '2020-11-20', '2020-11-27', '2020-12-04', '2020-12-11', '2020-12-18', '2020-12-25', '2021-01-08', '2021-01-15', '2021-01-22', '2021-01-29', '2021-02-05', '2021-02-10', '2021-02-19', '2021-02-26', '2021-03-05', '2021-03-12', '2021-03-19', '2021-03-26', '2021-04-02', '2021-04-09', '2021-04-16', '2021-04-23', '2021-04-30', '2021-05-07', '2021-05-14', '2021-05-21', '2021-05-28', '2021-06-04', '2021-06-11', '2021-06-18', '2021-06-25', '2021-07-02', '2021-07-09', '2021-07-16', '2021-07-23', '2021-07-30', '2021-08-06', '2021-08-13', '2021-08-20', '2021-08-27', '2021-09-03', '2021-09-10', '2021-09-17', '2021-09-24', '2021-09-30', '2021-10-08', '2021-10-15', '2021-10-22', '2021-10-29', '2021-11-05', '2021-11-12'] 
+			},
+			 yAxis: {
+				 type: 'value',
+				 min: -15
+			 },
+			 series: [
+				 {
+					 name: '回撤',
+					 type: 'line',
+					 stack: '总量',
+					 data: [0, -0.0, -0.688, -0.0, -0.195, -0.584, -2.142, -2.434, -2.142, -3.116, -2.142, -0.0, -0.681, -0.875, -1.751, -0.681, -0.973, -1.654, -2.529, -3.016, -2.237, -0.195, -0.0, -0.0, -0.0, -0.963, -0.0, -0.758, -0.095, -0.0, -0.833, -0.0, -0.36, -1.169, -0.899, -2.158, -0.989, -0.899, -0.899, -0.0, -1.425, -1.158, -1.87, -2.404, -0.89, -1.425, -1.959, -0.0, -0.0, -2.245, -1.036, -3.541, -3.368, -2.763, -3.8, -3.886, -3.886, -5.009, -4.404, -5.009, -6.822, -7.081, -7.427, -5.44, -4.318, -2.332, -3.368, -2.332, -0.518, -1.554, -1.468, -0.345, -0.777, -1.641, -1.382, -2.332, -0.432, -0.0, -0.0, -0.507, -2.536, -3.128, -5.579, -4.227, -3.635, -6.34, -6.509, -6.34, -8.622, -9.129, -8.707, -9.383, -11.834, -10.735, -12.342, -11.834, -11.496, -9.806, -8.115, -9.975, -8.622, -7.27, -8.199, -8.538, -7.692, -7.692, -7.946, -7.946, -11.158, -10.735, -11.75, -8.453, -9.298, -6.086, -1.86, -0.0, -1.835, -2.919, -3.503, -4.587, -5.171, -3.92, -3.503, -2.002, -1.418, -0.667, -0.167, -0.0, -0.0, -1.568, -0.248, -0.248, -0.248, -0.413, -2.805, -2.31, -2.475, -2.31, -2.97, -1.898, -1.898, -1.898, -1.898, -1.898, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.149, -0.0, -0.0, -0.358, -0.788, -2.221, -2.436, -2.722, -1.648, -0.573, -0.0, -0.0, -0.136, -0.409, -1.774, -2.251, -1.637, -1.091, -0.0, -0.0, -0.0, -0.0, -0.196, -1.373, -1.765, -1.569, -0.588, -3.529, -2.353, -1.176, -1.438, -0.0, -0.324, -0.0, -1.603, -1.026, -3.462, -1.987, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.469, -3.105, -5.214, -6.796, -5.565],
+					 areaStyle: {type:"default"}
+				 }
+			 ]
+		 };
+		 ;
+		 if (option && typeof option === "object") {
+			 myChart.setOption(option, true);
+		 }
+				</script>
+		</div>
+		</div>
+			
+		<!-- Start Sample Area -->
+		<section class="sample-text-area">
+			<div class="container">
+				<h3 class="text-heading">策略说明</h3>
+				<p class="sample-text">
+					<ul class="unordered-list">
+						<li>该策略投资于国内期货市场，涉及40多个流动性好期货品种。</li>
+						<li>该策略是一套中长周期大容量(几十亿)的策略。</li>
+						<li>策略于2017年底形成初版。</li>
+						<li>2018年后跟踪效果优秀，于是在2018年12月12日开始实盘。</li>
+						<li>2019年3月22日，更新了策略模型。</li>
+						<li>2019年9月进一步更新了模型。</li>
+						<li>其中2019年的巨大回撤是因为那段时间黑天鹅频出，行情大幅度震荡。</li>
+						<li>疫情期间2020年3月许多品种形成强趋势，挣了一大笔。2020年底，商品普涨又挣了一笔。</li>
+						<li>2021年CTA还是持续了2020年下半年的偏多头行情，又表现出了行业同类策略的高级别水平。</li>
+						<!--li><a href = 'https://mp.weixin.qq.com/s/3d16-nnyunFrvlSg5YGyhg'>点此查看策略详细说明</a></li-->
+						<li><a href = 'https://www.ttqh.cn/index.php?action=site.cps-detail&user_id=548&range=1y'> 天天期货平台的账户记录一、</a><a href = 'https://www.ttqh.cn/index.php?action=site.cps-detail&user_id=692&range=1y'>二</a></li>
+						<!--li>2021年初我将目标波动率从11%调整成了18%。</li-->
+						<!--li>这是个人账户, 2025年1月1日之前，不接受任何打扰。</li-->
+					</ul>
+				</p>
+			</div>
+		</section>
+		<!-- End Sample Area -->
+		<!-- Strat Footer Area -->
+		<footer class="section-gap">
+			<div class="container">
+				<div class="row pt-60">
+					<div class="col-lg-3 col-sm-6">
+						<div class="single-footer-widget">
+							<h6 class="text-uppercase mb-20">邮箱</h6>
+							<p>
+								shiwei(at)yeshiwei.com
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="footer-bottom d-flex justify-content-between align-items-center flex-wrap">
+					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+					<p class="footer-text m-0">Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a></p>
+					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+				</div>
+			</div>
+		</footer>
+		<!-- End Footer Area -->
+
+		<script src="js/vendor/jquery-2.2.4.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+		<script src="js/vendor/bootstrap.min.js"></script>
+		<script src="js/jquery.ajaxchimp.min.js"></script>
+		<script src="js/owl.carousel.min.js"></script>
+		<script src="js/jquery.nice-select.min.js"></script>
+		<script src="js/jquery.magnific-popup.min.js"></script>
+		<script src="js/main.js"></script>
+</body>
+</html>
