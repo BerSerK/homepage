@@ -7,12 +7,13 @@ import datetime as dt
 filename = '/mnt/d/code/CTA/fundreport.xlsx'
 DAY_COUNT_OF_YEAR = 245
 WEEK_COUNT_OF_YEAR = 52
-YEAYLY_RISK_FREE_RATE = 0.03
+YEAYLY_RISK_FREE_RATE = 0.0
 
 def generate_page(template_filename, output_filename, df, period = 'week'):
+    df = df.dropna(subset = ['date', 'net_value']).copy()
     df.index = range(len(df))
-    df['net_value'] = df['net_value']/df['net_value'].iloc[0]
-    df['net_value'] = [round(float(a), 3) for a in df['net_value']]
+    df.loc[:,'net_value'] = df['net_value']/df['net_value'].iloc[0]
+    df.loc[:,'net_value'] = [round(float(a), 3) for a in df['net_value']]
     periodReturn = []
     for i in range(1, len(df)):
         periodReturn.append(df['net_value'].iloc[i]/df['net_value'][i-1] - 1)
@@ -47,7 +48,7 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
     max_draw_down = - min(draw_down) / 100
     calmar = (yearly_return - YEAYLY_RISK_FREE_RATE) / max_draw_down
 
-    df['year'] = [d.year for d in df['date']]
+    df.loc[:, 'year'] = [d.year for d in df['date']]
     last_year = df['year'].iloc[-1] - 1
     if last_year in set(df['year']):
         df_last_year = df.loc[df['year'] == last_year]
@@ -79,7 +80,7 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
     fp.close()
     return stats
 
-def make_outsample(output_filename = 'net_value_weekly15.html', start_date = '2020-01-01', leverage_up_2021 = True):
+def make_outsample(output_filename = 'net_value_weekly15.html', start_date = '2020-01-01', leverage_up_2021 = False):
     df = pd.read_excel(filename, sheet_name = '样本外周度', names = ['date', 'net_value'],
                     header=1)
     df = df.loc[df['date']>start_date]
@@ -96,7 +97,7 @@ def make_outsample(output_filename = 'net_value_weekly15.html', start_date = '20
         else:
             nav_item = (df['net_value'].iloc[i] - nav_start2021) * 3 / 5 + nav_start2021
             nav.append(nav_item)
-    df['net_value'] = nav
+    df.loc[:,'net_value'] = nav
     df = df.drop_duplicates(subset=['date'])
     return generate_page('net_value_template.html', output_filename, df)
 
@@ -114,7 +115,7 @@ def make15(start_time = '2020'):
         else:
             nav_item = (df['nav'].iloc[i] - nav_start2021) * 3 / 5 + nav_start2021
             nav.append(nav_item)
-    df['net_value'] = nav
+    df.loc[:, 'net_value'] = nav
     df = df.drop_duplicates(subset=['date'])
     if start_time == '2021':
         df = df.iloc[start2021:]
@@ -129,12 +130,25 @@ def make_yifeng():
     df = df.dropna()
     df = df.sort_values("date")
     df = df.drop_duplicates(subset=['date'])
-    df['date'] = df['date'].apply(lambda d: dt.datetime.strptime(d, "%Y%m%d"))
+    df.loc[:, 'date'] = df['date'].apply(lambda d: dt.datetime.strptime(d, "%Y%m%d"))
     print("yifeng product:")
     return generate_page('net_value_template3.html', 'net_value_prod.html', df, 'day')
     
+def make_yifeng_week():
+    df = pd.read_excel('/mnt/d/code/CTA/翼丰贝叶斯CTA一号产品净值表（数据更新至20220331）.xls', header = 1, converters = {'估值日期':str})
+    df = df.rename({"估值日期":"date", "累计单位净值":"net_value"}, axis = 1)
+    df['date'] = df['date'].apply(lambda x: x.split(" ")[0])
+    df['date'] = df['date'].apply(lambda x: "".join(x.split("-")))
+    df = df.dropna()
+    df = df.sort_values("date")
+    df = df.drop_duplicates(subset=['date'])
+    df.loc[:, 'date'] = df['date'].apply(lambda d: dt.datetime.strptime(d, "%Y%m%d"))
+    df = df.sort_values(by = "date", ascending=True)
+    print("yifeng product:")
+    return generate_page('net_value_template3.html', 'net_value_prod_week.html', df, 'week')
+
 def send():
-    files = ['net_value.html', 'net_value15.html', 'net_value_weekly15.html', 'net_value_weekly15_full.html', 'net_value2021.html', 'net_value_prod.html']
+    files = ['net_value.html', 'net_value15.html', 'net_value_weekly15.html', 'net_value_weekly15_full.html', 'net_value2021.html', 'net_value_prod.html', 'net_value_prod_week.html']
     net_value_list = [ '<li><a href = "%s">%s</a></li>\n'%(x, x.split(".")[0]) for x in files]
     net_value_list_page = open("net_value_list_template.html").read().replace("net_value_list", "".join(net_value_list))
     fp = open("net_value_list.html", 'w')
@@ -154,6 +168,7 @@ if __name__ == "__main__":
     data["2020年以来标准自营周度"] = make_outsample()
     data["2018年以来标准产品周度"] = make_outsample('net_value_weekly15_full.html', '2018-01-01')
     data["翼丰产品"] = make_yifeng()
+    data["翼丰周度"] = make_yifeng_week()
     df = pd.DataFrame(data).T
     display(df)
     df.to_excel("/mnt/d/code/CTA/stats_result.xlsx")
