@@ -4,7 +4,8 @@ import os
 import numpy as np
 import datetime as dt
 
-filename = '/mnt/d/code/CTA/fundreport.xlsx'
+#filename = '/mnt/d/code/CTA/fundreport.xlsx'
+filename = '/mnt/c/Users/yeshi/OneDrive/myQuant/fundreport.xlsx'
 DAY_COUNT_OF_YEAR = 245
 WEEK_COUNT_OF_YEAR = 52
 YEAYLY_RISK_FREE_RATE = 0.0
