@@ -87,7 +87,7 @@ def make_outsample(output_filename = 'net_value_weekly15.html', start_date = '20
     df = df.loc[df['date']>start_date]
     print('since %s, weekly:'%(start_date))
     if leverage_up_2021:
-        return generate_page('net_value_template.html', 'net_value.html', df)
+        return generate_page('net_value_template.html', 'net_value15.html', df)
 
     start2021 = list(df['date']).index(dt.datetime(2021,1,8))
     nav = []
@@ -124,7 +124,7 @@ def make15(start_time = '2020'):
         return generate_page('net_value_template2.html', 'net_value2021.html', df, 'day')
     else:
         print("since 2020, 15% vol:")
-        return generate_page('net_value_template2.html', 'net_value15.html', df, 'day')
+        return generate_page('net_value_template2.html', 'net_value.html', df, 'day')
  
 def make_yifeng():
     df = pd.read_excel('/mnt/d/code/cfmmc_crawler/翼丰贝叶斯CTA一号私募证券投资基金.xlsx', converters = {'date':str})
@@ -157,7 +157,7 @@ def send():
     fp.close()
     files.append('net_value_list.html')
     for filename in files:
-        cmd = 'scp %s root@vps.yeshiwei.com:/var/www/html/'%(filename)
+        cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/'%(filename)
         os.system(cmd)
     
 
