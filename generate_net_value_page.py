@@ -3,6 +3,7 @@ import sys
 import os
 import numpy as np
 import datetime as dt
+pd.options.mode.chained_assignment = None 
 
 #filename = '/mnt/d/code/CTA/fundreport.xlsx'
 filename = '/mnt/c/Users/yeshi/OneDrive/myQuant/fundreport.xlsx'
@@ -34,17 +35,20 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
         if pr < period_risk_free_return:
             return_tp.append( pr - period_risk_free_return )
     sortino =  ((np.mean(periodReturn) - risk_free_rate ) *np.sqrt(year_period_count))/np.std(return_tp)
-
-    date_str = str(list([d.date().strftime('%Y-%m-%d') for d in df['date']]))
-    data_str = str(list(df['net_value']))
-    draw_down = [0]
-    net_value = list(df['net_value'])
-    pre_max = net_value[0]
-    for i in range(1, len(net_value)):
-        if net_value[i] > pre_max:
-            pre_max = net_value[i]
-        draw_down.append(round(-100*(1-net_value[i]/pre_max), 3))
+    def makedata(df):
+        date_str = str(list([d.date().strftime('%Y-%m-%d') for d in df['date']]))
+        data_str = str(list(df['net_value']))
+        draw_down = [0]
+        net_value = list(df['net_value'])
+        pre_max = net_value[0]
+        for i in range(1, len(net_value)):
+            if net_value[i] > pre_max:
+                pre_max = net_value[i]
+            draw_down.append(round(-100*(1-net_value[i]/pre_max), 3))
+        return date_str, data_str, draw_down
     
+    date_str, data_str, draw_down = makedata(df)
+
     yearly_return = df['net_value'].iloc[-1]**(year_period_count/len(df)) - 1
     max_draw_down = - min(draw_down) / 100
     calmar = (yearly_return - YEAYLY_RISK_FREE_RATE) / max_draw_down
@@ -57,6 +61,13 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
     else:
         ytd = df['net_value'].iloc[-1] - 1
     ytd = "%.2f%%"%(ytd * 100)
+
+    last_year = df['year'].iloc[-1]
+    df_last_year = df.loc[df['year'] == last_year]
+    df_last_year.index = range(len(df_last_year))
+    df_last_year.loc[:,'net_value'] = df_last_year.loc[:,'net_value'] / df_last_year.loc[0,'net_value']
+    last_year_date_str, last_year_data_str, last_year_draw_down = makedata(df_last_year)
+    last_year_draw_down_str = str(last_year_draw_down)
     print("sharpe:%.2f"%sharpe, "vol:%.3f"%vol, 'last date:', df['date'].iloc[-1].date(), "ytd:", ytd, "mdd:%.3f"%max_draw_down, "sortino: %.3f"%sortino, "calmar: %.3f"%calmar, 'yearly return: %.2f%%'%(100*yearly_return))
     stats = {"sharpe": sharpe,
             "vol":vol,
@@ -66,11 +77,18 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
             "sortino":sortino,
             "calmar":calmar,
             "yearly_return":yearly_return}
+
     draw_down_str = str(draw_down)
     template = open(template_filename).read()
+    
+    template = template.replace('last_year_dates_pos', last_year_date_str)
+    template = template.replace('last_year_net_value_pos', last_year_data_str)
+    template = template.replace('last_year_draw_down_pos', last_year_draw_down_str)
+
     template = template.replace('dates_pos', date_str)
     template = template.replace('net_value_pos', data_str)
     template = template.replace('draw_down_pos', draw_down_str)
+    
     template = template.replace('YTD', ytd)
     comments =  open("net_value_comment.html").read()
     if output_filename == 'net_value.html':

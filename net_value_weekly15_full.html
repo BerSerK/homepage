@@ -212,6 +212,131 @@
 		</div>
 		</div>
 			
+		<!-- Last Year -->
+		<div class="white-bg">
+			<div class="container border-top-generic">
+				<div id="netvalue_container2" style="height: 360px"></div>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+				
+				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+				<script type="text/javascript">
+				 var dom = document.getElementById("netvalue_container2");
+				 var myChart = echarts.init(dom);
+				 var app = {};
+				 option = null;
+				 option = {
+					 title: {
+						 text: '今年曲线，年初以来: 10.63%'
+					 },
+					 tooltip: {
+						 trigger: 'axis'
+					 },
+					 legend: {
+						 data: ['净值曲线']
+					 },
+					 grid: {
+						 left: '3%',
+						 right: '4%',
+						 bottom: '3%',
+						 containLabel: true
+					 },
+					 toolbox: {
+						 feature: {
+							 saveAsImage: {}
+						 }
+					 },
+					 xAxis: {
+						 type: 'category',
+						 boundaryGap: false,
+						 data: ['2022-01-07', '2022-01-14', '2022-01-21', '2022-01-28', '2022-02-11', '2022-02-18', '2022-02-25', '2022-03-04', '2022-03-11', '2022-03-18', '2022-03-25', '2022-04-01', '2022-04-08', '2022-04-15', '2022-04-22', '2022-04-29', '2022-05-06'] 
+					},
+					 yAxis: {
+						 type: 'value',
+						 min: 0.95
+					 },
+					 series: [
+						 {
+							 name: '净值',
+							 type: 'line',
+							 stack: '总量',
+							 data: [1.0, 1.0114649681528662, 1.0452229299363056, 1.0496815286624204, 1.0719745222929937, 1.0656050955414011, 1.0687898089171974, 1.0745222929936307, 1.0910828025477708, 1.0936305732484077, 1.085987261146497, 1.0923566878980893, 1.0904458598726114, 1.0968152866242038, 1.0929936305732484, 1.0910828025477708, 1.0936305732484077]
+						 }
+					 ]
+				 };
+				 ;
+				 if (option && typeof option === "object") {
+					 myChart.setOption(option, true);
+				 }
+						</script>
+			</div>
+			
+			<div class="container border-top-generic">
+							
+			<div id="drawdown_container2" style="height: 200px"></div>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+			<script type="text/javascript">
+			 var dom = document.getElementById("drawdown_container2");
+			 var myChart = echarts.init(dom);
+			 var app = {};
+			 option = null;
+			 option = {
+				 title: {
+					 text: '策略回撤'
+				 },
+				 tooltip: {
+					 trigger: 'axis'
+				 },
+				 legend: {
+					 data: ['回撤百分比']
+				 },
+				 grid: {
+					 left: '3%',
+					 right: '4%',
+					 bottom: '3%',
+					 containLabel: true
+				 },
+				 toolbox: {
+					 feature: {
+						 saveAsImage: {}
+					 }
+				 },
+				 xAxis: {
+					 type: 'category',
+					 boundaryGap: false,
+					 data: ['2022-01-07', '2022-01-14', '2022-01-21', '2022-01-28', '2022-02-11', '2022-02-18', '2022-02-25', '2022-03-04', '2022-03-11', '2022-03-18', '2022-03-25', '2022-04-01', '2022-04-08', '2022-04-15', '2022-04-22', '2022-04-29', '2022-05-06'] 
+				},
+				 yAxis: {
+					 type: 'value',
+					 min: -15
+				 },
+				 series: [
+					 {
+						 name: '回撤',
+						 type: 'line',
+						 stack: '总量',
+						 data: [0, -0.0, -0.0, -0.0, -0.0, -0.594, -0.297, -0.0, -0.0, -0.0, -0.699, -0.116, -0.291, -0.0, -0.348, -0.523, -0.29],
+						 areaStyle: {type:"default"}
+					 }
+				 ]
+			 };
+			 ;
+			 if (option && typeof option === "object") {
+				 myChart.setOption(option, true);
+			 }
+					</script>
+			</div>
+		</div>
 		<!-- Start Sample Area -->
 		<section class="sample-text-area">
 			<div class="container">
