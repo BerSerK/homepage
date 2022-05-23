@@ -85,19 +85,123 @@
 			</div>
 		</section>
 		<!-- End Team Force Area -->
-	
+			<!-- Last Year -->
+			<div class="white-bg">
+				<div class="container border-top-generic">
+					<div id="netvalue_container2" style="height: 360px"></div>
+					<script type="text/javascript" src="echarts.min.js"></script>
+					<script type="text/javascript">
+					 var dom = document.getElementById("netvalue_container2");
+					 var myChart = echarts.init(dom);
+					 var app = {};
+					 option = null;
+					 option = {
+						 title: {
+							 text: '今年曲线，年初以来: YTD'
+						 },
+						 tooltip: {
+							 trigger: 'axis'
+						 },
+						 legend: {
+							 data: ['净值曲线']
+						 },
+						 grid: {
+							 left: '3%',
+							 right: '4%',
+							 bottom: '3%',
+							 containLabel: true
+						 },
+						 toolbox: {
+							 feature: {
+								 saveAsImage: {}
+							 }
+						 },
+						 xAxis: {
+							 type: 'category',
+							 boundaryGap: false,
+							 data: last_year_dates_pos 
+						},
+						 yAxis: {
+							 type: 'value',
+							 min: 0.95
+						 },
+						 series: [
+							 {
+								 name: '净值',
+								 type: 'line',
+								 stack: '总量',
+								 data: last_year_net_value_pos
+							 }
+						 ]
+					 };
+					 ;
+					 if (option && typeof option === "object") {
+						 myChart.setOption(option, true);
+					 }
+							</script>
+				</div>
+				
+				<div class="container border-top-generic">
+								
+				<div id="drawdown_container2" style="height: 200px"></div>
+				<script type="text/javascript" src="echarts.min.js"></script>
+				<script type="text/javascript">
+				 var dom = document.getElementById("drawdown_container2");
+				 var myChart = echarts.init(dom);
+				 var app = {};
+				 option = null;
+				 option = {
+					 title: {
+						 text: '策略回撤'
+					 },
+					 tooltip: {
+						 trigger: 'axis'
+					 },
+					 legend: {
+						 data: ['回撤百分比']
+					 },
+					 grid: {
+						 left: '3%',
+						 right: '4%',
+						 bottom: '3%',
+						 containLabel: true
+					 },
+					 toolbox: {
+						 feature: {
+							 saveAsImage: {}
+						 }
+					 },
+					 xAxis: {
+						 type: 'category',
+						 boundaryGap: false,
+						 data: last_year_dates_pos 
+					},
+					 yAxis: {
+						 type: 'value',
+						 min: -15
+					 },
+					 series: [
+						 {
+							 name: '回撤',
+							 type: 'line',
+							 stack: '总量',
+							 data: last_year_draw_down_pos,
+							 areaStyle: {type:"default"}
+						 }
+					 ]
+				 };
+				 ;
+				 if (option && typeof option === "object") {
+					 myChart.setOption(option, true);
+				 }
+						</script>
+				</div>
+			</div>
 		<!-- Start Align Area -->
 		<div class="white-bg">
 		    <div class="container border-top-generic">
 					<div id="netvalue_container" style="height: 360px"></div>
-					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
-					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
-					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
-					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
-					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
-				  
-					<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+					<script type="text/javascript" src="echarts.min.js"></script>
 					<script type="text/javascript">
 			 var dom = document.getElementById("netvalue_container");
 			 var myChart = echarts.init(dom);
@@ -152,13 +256,7 @@
 			<div class="container border-top-generic">
 		        
 				<div id="drawdown_container" style="height: 200px"></div>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+				<script type="text/javascript" src="echarts.min.js"></script>
 				<script type="text/javascript">
 		 var dom = document.getElementById("drawdown_container");
 		 var myChart = echarts.init(dom);
@@ -212,131 +310,7 @@
 		</div>
 		</div>
 			
-		<!-- Last Year -->
-		<div class="white-bg">
-			<div class="container border-top-generic">
-				<div id="netvalue_container2" style="height: 360px"></div>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
-				
-				<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
-				<script type="text/javascript">
-				 var dom = document.getElementById("netvalue_container2");
-				 var myChart = echarts.init(dom);
-				 var app = {};
-				 option = null;
-				 option = {
-					 title: {
-						 text: '今年曲线，年初以来: YTD'
-					 },
-					 tooltip: {
-						 trigger: 'axis'
-					 },
-					 legend: {
-						 data: ['净值曲线']
-					 },
-					 grid: {
-						 left: '3%',
-						 right: '4%',
-						 bottom: '3%',
-						 containLabel: true
-					 },
-					 toolbox: {
-						 feature: {
-							 saveAsImage: {}
-						 }
-					 },
-					 xAxis: {
-						 type: 'category',
-						 boundaryGap: false,
-						 data: last_year_dates_pos 
-					},
-					 yAxis: {
-						 type: 'value',
-						 min: 0.95
-					 },
-					 series: [
-						 {
-							 name: '净值',
-							 type: 'line',
-							 stack: '总量',
-							 data: last_year_net_value_pos
-						 }
-					 ]
-				 };
-				 ;
-				 if (option && typeof option === "object") {
-					 myChart.setOption(option, true);
-				 }
-						</script>
-			</div>
-			
-			<div class="container border-top-generic">
-							
-			<div id="drawdown_container2" style="height: 200px"></div>
-			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
-			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
-			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
-			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
-			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
-			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
-			<script type="text/javascript">
-			 var dom = document.getElementById("drawdown_container2");
-			 var myChart = echarts.init(dom);
-			 var app = {};
-			 option = null;
-			 option = {
-				 title: {
-					 text: '策略回撤'
-				 },
-				 tooltip: {
-					 trigger: 'axis'
-				 },
-				 legend: {
-					 data: ['回撤百分比']
-				 },
-				 grid: {
-					 left: '3%',
-					 right: '4%',
-					 bottom: '3%',
-					 containLabel: true
-				 },
-				 toolbox: {
-					 feature: {
-						 saveAsImage: {}
-					 }
-				 },
-				 xAxis: {
-					 type: 'category',
-					 boundaryGap: false,
-					 data: last_year_dates_pos 
-				},
-				 yAxis: {
-					 type: 'value',
-					 min: -15
-				 },
-				 series: [
-					 {
-						 name: '回撤',
-						 type: 'line',
-						 stack: '总量',
-						 data: last_year_draw_down_pos,
-						 areaStyle: {type:"default"}
-					 }
-				 ]
-			 };
-			 ;
-			 if (option && typeof option === "object") {
-				 myChart.setOption(option, true);
-			 }
-					</script>
-			</div>
-		</div>
+
 		<!-- Start Sample Area -->
 		<section class="sample-text-area">
 			<div class="container">
