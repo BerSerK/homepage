@@ -3,6 +3,7 @@ import sys
 import os
 import numpy as np
 import datetime as dt
+pd.options.mode.chained_assignment = None 
 
 #filename = '/mnt/d/code/CTA/fundreport.xlsx'
 filename = '/mnt/c/Users/yeshi/OneDrive/myQuant/fundreport.xlsx'
@@ -11,6 +12,7 @@ WEEK_COUNT_OF_YEAR = 52
 YEAYLY_RISK_FREE_RATE = 0.0
 
 def generate_page(template_filename, output_filename, df, period = 'week'):
+    print('-'*80)
     df = df.dropna(subset = ['date', 'net_value']).copy()
     df.index = range(len(df))
     df.loc[:,'net_value'] = df['net_value']/df['net_value'].iloc[0]
@@ -34,19 +36,33 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
         if pr < period_risk_free_return:
             return_tp.append( pr - period_risk_free_return )
     sortino =  ((np.mean(periodReturn) - risk_free_rate ) *np.sqrt(year_period_count))/np.std(return_tp)
-
-    date_str = str(list([d.date().strftime('%Y-%m-%d') for d in df['date']]))
-    data_str = str(list(df['net_value']))
-    draw_down = [0]
-    net_value = list(df['net_value'])
-    pre_max = net_value[0]
-    for i in range(1, len(net_value)):
-        if net_value[i] > pre_max:
-            pre_max = net_value[i]
-        draw_down.append(round(-100*(1-net_value[i]/pre_max), 3))
+    def makedata(df):
+        date_str = str(list([d.date().strftime('%Y-%m-%d') for d in df['date']]))
+        data_str = str(list(df['net_value']))
+        draw_down = [0]
+        net_value = list(df['net_value'])
+        pre_max = net_value[0]
+        pre_max_index = 0
+        max_draw_down_recovery = 0
+        for i in range(1, len(net_value)):
+            if net_value[i] > pre_max:
+                pre_max = net_value[i]
+                draw_down_recovery = i - pre_max_index
+                if draw_down_recovery > max_draw_down_recovery:
+                    max_draw_down_recovery = draw_down_recovery
+                    #print("i", i, "ddr", draw_down_recovery, "mddr", max_draw_down_recovery, "pmi", pre_max_index)
+                pre_max_index = i
+            draw_down.append(round(-100*(1-net_value[i]/pre_max), 3))
+        current_drawdown_period = len(net_value) - pre_max_index
+        if current_drawdown_period > max_draw_down_recovery:
+            print("Last draw down is not recoved, and have lasts %d periods."%current_drawdown_period)
+        return date_str, data_str, draw_down, max_draw_down_recovery
     
+    date_str, data_str, draw_down, max_draw_down_recovery = makedata(df)
+
     yearly_return = df['net_value'].iloc[-1]**(year_period_count/len(df)) - 1
     max_draw_down = - min(draw_down) / 100
+
     calmar = (yearly_return - YEAYLY_RISK_FREE_RATE) / max_draw_down
 
     df.loc[:, 'year'] = [d.year for d in df['date']]
@@ -57,7 +73,20 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
     else:
         ytd = df['net_value'].iloc[-1] - 1
     ytd = "%.2f%%"%(ytd * 100)
-    print("sharpe:%.2f"%sharpe, "vol:%.3f"%vol, 'last date:', df['date'].iloc[-1].date(), "ytd:", ytd, "mdd:%.3f"%max_draw_down, "sortino: %.3f"%sortino, "calmar: %.3f"%calmar, 'yearly return: %.2f%%'%(100*yearly_return))
+
+    last_year = df['year'].iloc[-1]
+    df_last_year = df.loc[df['year'] == last_year]
+    df_last_year.index = range(len(df_last_year))
+    df_last_year.loc[:,'net_value'] = df_last_year.loc[:,'net_value'] / df_last_year.loc[0,'net_value']
+    last_year_date_str, last_year_data_str, last_year_draw_down, _ = makedata(df_last_year)
+    last_year_draw_down_str = str(last_year_draw_down)
+
+    max_single_period_drawdwon = (0 if min(periodReturn)>0 else -min(periodReturn))
+
+    print("sharpe:%.2f"%sharpe, "vol:%.3f"%vol, 'last date:', df['date'].iloc[-1].date(), "ytd:", ytd, 
+    "mdd:%.3f"%max_draw_down, "sortino: %.3f"%sortino, "calmar: %.3f"%calmar, 'yearly return: %.2f%%'%(100*yearly_return),
+    "max single k draw down:%.2f%%"%(100 * max_single_period_drawdwon), "max draw down recovery:", max_draw_down_recovery)
+
     stats = {"sharpe": sharpe,
             "vol":vol,
             "last_date": df['date'].iloc[-1].date(),
@@ -65,20 +94,31 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
             "mdd":max_draw_down,
             "sortino":sortino,
             "calmar":calmar,
-            "yearly_return":yearly_return}
+            "yearly_return":yearly_return,
+            "max_single_k_draw_down":max_single_period_drawdwon,
+            "max_draw_down_recovery":max_draw_down_recovery}
+
     draw_down_str = str(draw_down)
     template = open(template_filename).read()
+    
+    template = template.replace('last_year_dates_pos', last_year_date_str)
+    template = template.replace('last_year_net_value_pos', last_year_data_str)
+    template = template.replace('last_year_draw_down_pos', last_year_draw_down_str)
+
     template = template.replace('dates_pos', date_str)
     template = template.replace('net_value_pos', data_str)
     template = template.replace('draw_down_pos', draw_down_str)
+    
     template = template.replace('YTD', ytd)
     comments =  open("net_value_comment.html").read()
-    if output_filename == 'net_value.html':
+    if output_filename == 'net_value25.html':
         comments += '\n						<li>2021年初我将目标波动率从11%调整成了18%。</li>'
     template = template.replace('comments_pos', comments)
     fp = open(output_filename,'w')
     fp.write(template)
     fp.close()
+    print('-'*80)
+    df.loc[:,['date', 'net_value']].to_csv(output_filename.replace("html", "csv"), index = False)
     return stats
 
 def make_outsample(output_filename = 'net_value_weekly15.html', start_date = '2020-01-01', leverage_up_2021 = False):
@@ -87,7 +127,7 @@ def make_outsample(output_filename = 'net_value_weekly15.html', start_date = '20
     df = df.loc[df['date']>start_date]
     print('since %s, weekly:'%(start_date))
     if leverage_up_2021:
-        return generate_page('net_value_template.html', 'net_value.html', df)
+        return generate_page('net_value_template.html', 'net_value25.html', df)
 
     start2021 = list(df['date']).index(dt.datetime(2021,1,8))
     nav = []
@@ -124,7 +164,7 @@ def make15(start_time = '2020'):
         return generate_page('net_value_template2.html', 'net_value2021.html', df, 'day')
     else:
         print("since 2020, 15% vol:")
-        return generate_page('net_value_template2.html', 'net_value15.html', df, 'day')
+        return generate_page('net_value_template2.html', 'net_value.html', df, 'day')
  
 def make_yifeng():
     df = pd.read_excel('/mnt/d/code/cfmmc_crawler/翼丰贝叶斯CTA一号私募证券投资基金.xlsx', converters = {'date':str})
@@ -136,7 +176,7 @@ def make_yifeng():
     return generate_page('net_value_template3.html', 'net_value_prod.html', df, 'day')
     
 def make_yifeng_week():
-    df = pd.read_excel('/mnt/d/code/CTA/翼丰贝叶斯CTA一号产品净值表（数据更新至20220331）.xls', header = 1, converters = {'估值日期':str})
+    df = pd.read_excel('/mnt/d/code/CTA/翼丰贝叶斯CTA一号产品净值表（数据更新至20220610）.xls', header = 1, converters = {'估值日期':str})
     df = df.rename({"估值日期":"date", "累计单位净值":"net_value"}, axis = 1)
     df['date'] = df['date'].apply(lambda x: x.split(" ")[0])
     df['date'] = df['date'].apply(lambda x: "".join(x.split("-")))
@@ -149,7 +189,7 @@ def make_yifeng_week():
     return generate_page('net_value_template3.html', 'net_value_prod_week.html', df, 'week')
 
 def send():
-    files = ['net_value.html', 'net_value15.html', 'net_value_weekly15.html', 'net_value_weekly15_full.html', 'net_value2021.html', 'net_value_prod.html', 'net_value_prod_week.html']
+    files = ['net_value.html', 'net_value25.html', 'net_value_weekly15.html', 'net_value_weekly15_full.html', 'net_value2021.html', 'net_value_prod.html', 'net_value_prod_week.html']
     net_value_list = [ '<li><a href = "%s">%s</a></li>\n'%(x, x.split(".")[0]) for x in files]
     net_value_list_page = open("net_value_list_template.html").read().replace("net_value_list", "".join(net_value_list))
     fp = open("net_value_list.html", 'w')
@@ -157,7 +197,10 @@ def send():
     fp.close()
     files.append('net_value_list.html')
     for filename in files:
-        cmd = 'scp %s root@vps.yeshiwei.com:/var/www/html/'%(filename)
+        cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/'%(filename)
+        os.system(cmd)
+        filename = filename.replace("html", "csv")
+        cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/'%(filename)
         os.system(cmd)
     
 
