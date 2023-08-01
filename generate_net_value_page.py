@@ -6,13 +6,13 @@ import datetime as dt
 pd.options.mode.chained_assignment = None 
 
 #filename = '/mnt/d/code/CTA/fundreport.xlsx'
-filename = '/mnt/c/Users/yeshi/OneDrive/myQuant/fundreport.xlsx'
+filename = '/mnt/c/Users/yeshi/OneDrive/我的Quant/fundreport.xlsx'
 DAY_COUNT_OF_YEAR = 245
 WEEK_COUNT_OF_YEAR = 52
 YEAYLY_RISK_FREE_RATE = 0.0
 
 def generate_page(template_filename, output_filename, df, period = 'week'):
-    print('-'*80)
+    #print('-' * 80)
     df = df.dropna(subset = ['date', 'net_value']).copy()
     df.index = range(len(df))
     df.loc[:,'net_value'] = df['net_value']/df['net_value'].iloc[0]
@@ -114,10 +114,12 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
     if output_filename == 'net_value25.html':
         comments += '\n						<li>2021年初我将目标波动率从11%调整成了18%。</li>'
     template = template.replace('comments_pos', comments)
+    yetan = open("net_value_yetan.html").read()
+    template = template.replace('yetan_pos', yetan)
     fp = open(output_filename,'w')
     fp.write(template)
     fp.close()
-    print('-'*80)
+    print('='*80)
     df.loc[:,['date', 'net_value']].to_csv(output_filename.replace("html", "csv"), index = False)
     return stats
 
@@ -208,11 +210,13 @@ if __name__ == "__main__":
     data = {}
     data["2020年以来标准产品"] = make15()
     data["2021年以来标准产品"] = make15('2021')
+    print("*" * 18 + " 周度 " + "*" * 18)
     data["2020年以来实际自营周度"] = make_outsample(None, "2020-01-01", True)
+    print("*" * 18 + " 周度标准 " + "*" * 18)
     data["2020年以来标准自营周度"] = make_outsample()
     data["2018年以来标准产品周度"] = make_outsample('net_value_weekly15_full.html', '2018-01-01')
-    data["翼丰产品"] = make_yifeng()
-    data["翼丰周度"] = make_yifeng_week()
+    #data["翼丰产品"] = make_yifeng()
+    #data["翼丰周度"] = make_yifeng_week()
     df = pd.DataFrame(data).T
     display(df)
     df.to_excel("/mnt/d/code/CTA/stats_result.xlsx")
