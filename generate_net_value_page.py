@@ -210,7 +210,7 @@ if __name__ == "__main__":
     data = {}
     data["2020年以来标准产品"] = make15()
     data["2021年以来标准产品"] = make15('2021')
-    print("*" * 18 + " 周度 " + "*" * 18)
+    print("*" * 18 + "周度原始" + "*" * 18)
     data["2020年以来实际自营周度"] = make_outsample(None, "2020-01-01", True)
     print("*" * 18 + " 周度标准 " + "*" * 18)
     data["2020年以来标准自营周度"] = make_outsample()
