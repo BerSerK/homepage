@@ -13,6 +13,7 @@ YEAYLY_RISK_FREE_RATE = 0.0
 
 def generate_page(template_filename, output_filename, df, period = 'week'):
     #print('-' * 80)
+    df = df.loc[df['date'] <= dt.datetime.today()]
     df = df.dropna(subset = ['date', 'net_value']).copy()
     df.index = range(len(df))
     df.loc[:,'net_value'] = df['net_value']/df['net_value'].iloc[0]
