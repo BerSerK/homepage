@@ -6,7 +6,7 @@ import datetime as dt
 pd.options.mode.chained_assignment = None 
 
 #filename = '/mnt/d/code/CTA/fundreport.xlsx'
-filename = '/mnt/c/Users/yeshi/OneDrive/我的Quant/fundreport.xlsx'
+filename = '/mnt/d/OneDrive/001我的Quant/data/fundreport.xlsx'
 DAY_COUNT_OF_YEAR = 245
 WEEK_COUNT_OF_YEAR = 52
 YEAYLY_RISK_FREE_RATE = 0.0
@@ -200,10 +200,10 @@ def send():
     fp.close()
     files.append('net_value_list.html')
     for filename in files:
-        cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/'%(filename)
+        cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/cta/'%(filename)
         os.system(cmd)
         filename = filename.replace("html", "csv")
-        cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/'%(filename)
+        cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/cta/'%(filename)
         os.system(cmd)
     
 
