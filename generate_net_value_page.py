@@ -202,11 +202,12 @@ def send():
     for filename in files:
         cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/cta/'%(filename)
         os.system(cmd)
-        filename = filename.replace("html", "csv")
-        cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/cta/'%(filename)
-        os.system(cmd)
+        if filename != 'net_value_list.html':
+            filename = filename.replace("html", "csv")
+            cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/cta/'%(filename)
+            os.system(cmd)
+    print("send done.")
     
-
 if __name__ == "__main__":
     data = {}
     data["2020年以来标准产品"] = make15()
