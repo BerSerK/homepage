@@ -125,7 +125,7 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
     return stats
 
 def make_outsample(output_filename = 'net_value_weekly15.html', start_date = '2020-01-01', leverage_up_2021 = False):
-    df = pd.read_excel(filename, sheet_name = '样本外周度', names = ['date', 'net_value'],
+    df = pd.read_excel(filename, sheet_name = '样本外周度', names = ['date', 'net_value'], na_values=['#REF!'],
                     header=1)
     df = df.loc[df['date']>start_date]
     print('since %s, weekly:'%(start_date))
@@ -147,8 +147,8 @@ def make_outsample(output_filename = 'net_value_weekly15.html', start_date = '20
 
 def make15(start_time = '2020'):
     df = pd.read_excel(filename, sheet_name = '2020年以后', names = ['date', 'nav'],
-                    header=1)
-
+                    header=0, na_values=['#REF!'])
+    print("data: ", df.head())
     df = df.dropna()
     start2021 = list(df['date']).index(dt.datetime(2021,1,6))
     nav = []
