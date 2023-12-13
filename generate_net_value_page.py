@@ -3,6 +3,7 @@ import sys
 import os
 import numpy as np
 import datetime as dt
+from tabulate import tabulate
 pd.options.mode.chained_assignment = None 
 
 #filename = '/mnt/d/code/CTA/fundreport.xlsx'
@@ -220,7 +221,7 @@ if __name__ == "__main__":
     #data["翼丰产品"] = make_yifeng()
     #data["翼丰周度"] = make_yifeng_week()
     df = pd.DataFrame(data).T
-    display(df)
+    print(tabulate(df, headers='keys', tablefmt='psql'))
     df.to_excel("/mnt/d/code/CTA/stats_result.xlsx")
     if len(sys.argv) == 2 and sys.argv[1] == 'send':
         send()
