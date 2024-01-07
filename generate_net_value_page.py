@@ -78,6 +78,9 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
 
     last_year = df['year'].iloc[-1]
     df_last_year = df.loc[df['year'] == last_year]
+    # df_last_year 前面加上上一年的最后一天的数据.
+    df_pre_year = df.loc[df['year'] == last_year - 1]
+    df_last_year = pd.concat([df_pre_year.iloc[-1:], df_last_year])
     df_last_year.index = range(len(df_last_year))
     df_last_year.loc[:,'net_value'] = df_last_year.loc[:,'net_value'] / df_last_year.loc[0,'net_value']
     last_year_date_str, last_year_data_str, last_year_draw_down, _ = makedata(df_last_year)
@@ -103,6 +106,7 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
     draw_down_str = str(draw_down)
     template = open(template_filename).read()
     
+    # last year = 今年.
     template = template.replace('last_year_dates_pos', last_year_date_str)
     template = template.replace('last_year_net_value_pos', last_year_data_str)
     template = template.replace('last_year_draw_down_pos', last_year_draw_down_str)
