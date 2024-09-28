@@ -151,8 +151,12 @@ def make_outsample(output_filename = 'net_value_weekly15.html', start_date = '20
     return generate_page('net_value_template.html', output_filename, df)
 
 def make15(start_time = '2020'):
-    df = pd.read_excel(filename, sheet_name = '2020年以后', names = ['date', 'nav'],
-                    header=0, na_values=['#REF!'])
+    sheet_name = '2020年以后'
+    print("filename:", filename, "sheet:", sheet_name)
+    # df = pd.read_excel(filename, sheet_name = sheet_name, names = ['date', 'nav'],
+    #                header=0, na_values=['#REF!'])
+    df = pd.read_excel(filename, sheet_name = sheet_name, names = ['date', 'nav'],
+                    header=0)
     print("data: ", df.head())
     df = df.dropna()
     start2021 = list(df['date']).index(dt.datetime(2021,1,6))
