@@ -120,6 +120,7 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
     if output_filename == 'net_value25.html':
         comments += '\n						<li>2021年初我将目标波动率从11%调整成了18%。</li>'
     template = template.replace('comments_pos', comments)
+    
     yetan = open("net_value_yetan.html").read()
     template = template.replace('yetan_pos', yetan)
     fp = open(output_filename,'w')
@@ -203,11 +204,13 @@ def make_yifeng_week():
 def send():
     files = ['net_value.html', 'net_value25.html', 'net_value_weekly15.html', 'net_value_weekly15_full.html', 'net_value2021.html', 'net_value_prod.html', 'net_value_prod_week.html']
     net_value_list = [ '<li><a href = "%s">%s</a></li>\n'%(x, x.split(".")[0]) for x in files]
+    '''
     net_value_list_page = open("net_value_list_template.html").read().replace("net_value_list", "".join(net_value_list))
     fp = open("net_value_list.html", 'w')
     fp.write(net_value_list_page)
     fp.close()
     files.append('net_value_list.html')
+    '''
     for filename in files:
         cmd = 'scp %s ubuntu@vps.yeshiwei.com:/var/www/html/cta/'%(filename)
         os.system(cmd)
