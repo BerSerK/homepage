@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTA业绩曲线</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: linear-gradient(145deg, #0f172a 0%, #0b2540 45%, #07212e 100%);
+      --panel: rgba(255, 255, 255, 0.04);
+      --panel-strong: rgba(255, 255, 255, 0.08);
+      --text: #e7edf5;
+      --muted: #9db3c7;
+      --accent: #31d3a3;
+      --accent-2: #ffb347;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 48px 5vw 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .title {
+      font-size: clamp(28px, 4vw, 46px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--panel-strong);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, var(--accent) 60%, transparent 100%);
+      box-shadow: 0 0 12px rgba(49, 211, 163, 0.8);
+    }
+
+    main {
+      padding: 12px 5vw 64px;
+      flex: 1;
+    }
+
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin: 12px auto 0;
+      max-width: 960px;
+      width: 100%;
+    }
+
+    .card {
+      position: relative;
+      background: var(--panel);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(6px);
+      box-shadow: var(--shadow);
+      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+    }
+
+    .card img {
+      width: 100%;
+      display: block;
+      height: auto;
+      object-fit: contain;
+      background: #0a1826;
+    }
+
+    .card .meta {
+      position: static;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel-strong);
+      padding: 10px 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .meta .label {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: rgba(49, 211, 163, 0.15);
+      color: var(--accent);
+      font-weight: 600;
+      border: 1px solid rgba(49, 211, 163, 0.35);
+    }
+
+    .empty {
+      margin-top: 18px;
+      padding: 24px;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
+      text-align: center;
+    }
+
+    footer {
+      padding: 18px 5vw 32px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 32px 6vw 18px;
+      }
+      main {
+        padding: 8px 6vw 48px;
+      }
+      .grid {
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="badge"><span class="dot"></span><span>CTA Visuals</span></div>
+      <h1 class="title">CTA业绩曲线</h1>
+      <p class="subtitle">集中展示 imgs 文件夹中的净值走势与账户表现图。</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="grid" id="gallery"></section>
+    <div class="empty" id="empty" hidden>未发现可展示的图片，请将图像放入 imgs/ 目录。</div>
+  </main>
+
+  <footer>由 CTA 图片自动生成，提供轻量查看体验。</footer>
+
+  <script>
+    // 配置要展示的图片文件名
+    const images = [
+      'nav_plot_account_50001278.png',
+      'nav_plot_account_50006008.png',
+      'total_nav_plot.png'
+    ];
+
+    const gallery = document.getElementById('gallery');
+    const empty = document.getElementById('empty');
+
+    function createCard(src) {
+      const card = document.createElement('article');
+      card.className = 'card';
+
+      const img = document.createElement('img');
+      img.src = `imgs/${src}`;
+      img.alt = src;
+      img.loading = 'lazy';
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+
+      const label = document.createElement('span');
+      label.className = 'label';
+      label.textContent = src.replace(/_/g, ' ');
+
+      const pill = document.createElement('span');
+      pill.className = 'pill';
+      pill.textContent = 'PNG';
+
+      meta.append(label, pill);
+      card.append(img, meta);
+      return card;
+    }
+
+    function render() {
+      if (!images.length) {
+        empty.hidden = false;
+        return;
+      }
+      images.forEach(name => gallery.appendChild(createCard(name)));
+    }
+
+    render();
+  </script>
+</body>
+</html>
