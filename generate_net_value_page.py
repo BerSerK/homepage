@@ -39,8 +39,11 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
             return_tp.append( pr - period_risk_free_return )
     sortino =  ((np.mean(periodReturn) - risk_free_rate ) *np.sqrt(year_period_count))/np.std(return_tp)
     def makedata(df):
-        date_str = str(list([d.date().strftime('%Y-%m-%d') for d in df['date']]))
-        data_str = str(list(df['net_value']))
+        date_list = list([d.date().strftime('%Y-%m-%d') for d in df['date']])
+        date_str = str(date_list)
+        data_list = list(df['net_value'])
+        date_data_list = list([[a[0], a[1]] for a in zip(date_list, data_list)])
+        date_data_str = str(date_data_list)
         draw_down = [0]
         net_value = list(df['net_value'])
         pre_max = net_value[0]
@@ -58,9 +61,10 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
         current_drawdown_period = len(net_value) - pre_max_index
         if current_drawdown_period > max_draw_down_recovery:
             print("Last draw down is not recoved, and have lasts %d periods."%current_drawdown_period)
-        return date_str, data_str, draw_down, max_draw_down_recovery
+        
+        return date_list, date_data_str, draw_down, max_draw_down_recovery
     
-    date_str, data_str, draw_down, max_draw_down_recovery = makedata(df)
+    date_list, data_str, draw_down, max_draw_down_recovery = makedata(df)
 
     yearly_return = df['net_value'].iloc[-1]**(year_period_count/len(df)) - 1
     max_draw_down = - min(draw_down) / 100
@@ -83,8 +87,8 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
     df_last_year = pd.concat([df_pre_year.iloc[-1:], df_last_year])
     df_last_year.index = range(len(df_last_year))
     df_last_year.loc[:,'net_value'] = df_last_year.loc[:,'net_value'] / df_last_year.loc[0,'net_value']
-    last_year_date_str, last_year_data_str, last_year_draw_down, _ = makedata(df_last_year)
-    last_year_draw_down_str = str(last_year_draw_down)
+    last_year_date_list, last_year_data_str, last_year_draw_down, _ = makedata(df_last_year)
+    last_year_draw_down_str = str([[a[0], a[1]] for a in zip(last_year_date_list, last_year_draw_down)])
 
     max_single_period_drawdwon = (0 if min(periodReturn)>0 else -min(periodReturn))
 
@@ -103,15 +107,14 @@ def generate_page(template_filename, output_filename, df, period = 'week'):
             "max_single_k_draw_down":max_single_period_drawdwon,
             "max_draw_down_recovery":max_draw_down_recovery}
 
-    draw_down_str = str(draw_down)
+    draw_down_str = str([[a[0], a[1]] for a in zip(date_list, draw_down)])
     template = open(template_filename).read()
     
     # last year = 今年.
-    template = template.replace('last_year_dates_pos', last_year_date_str)
+
     template = template.replace('last_year_net_value_pos', last_year_data_str)
     template = template.replace('last_year_draw_down_pos', last_year_draw_down_str)
 
-    template = template.replace('dates_pos', date_str)
     template = template.replace('net_value_pos', data_str)
     template = template.replace('draw_down_pos', draw_down_str)
     
