@@ -12,14 +12,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: linear-gradient(145deg, #0f172a 0%, #0b2540 45%, #07212e 100%);
-      --panel: rgba(255, 255, 255, 0.04);
-      --panel-strong: rgba(255, 255, 255, 0.08);
-      --text: #e7edf5;
-      --muted: #9db3c7;
-      --accent: #31d3a3;
-      --accent-2: #ffb347;
-      --shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+      --bg: linear-gradient(140deg, #ffffff 0%, #f6f6fc 55%, #f0f8e9 100%);
+      --panel: rgba(255, 255, 255, 0.9);
+      --panel-strong: #f9f9ff;
+      --text: #222222;
+      --muted: #777777;
+      --accent: #6cbb23;
+      --accent-2: #a6d477;
+      --shadow: 0 14px 38px rgba(108, 187, 35, 0.14);
       --radius: 16px;
     }
 
@@ -80,7 +80,7 @@
       height: 8px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #fff 0%, var(--accent) 60%, transparent 100%);
-      box-shadow: 0 0 12px rgba(49, 211, 163, 0.8);
+      box-shadow: 0 0 12px rgba(108, 187, 35, 0.55);
     }
 
     main {
@@ -121,7 +121,7 @@
       display: block;
       height: auto;
       object-fit: contain;
-      background: #0a1826;
+      background: #f0f8e9;
     }
 
     .card .meta {
@@ -145,16 +145,16 @@
     .pill {
       padding: 6px 10px;
       border-radius: 10px;
-      background: rgba(49, 211, 163, 0.15);
+      background: rgba(108, 187, 35, 0.12);
       color: var(--accent);
       font-weight: 600;
-      border: 1px solid rgba(49, 211, 163, 0.35);
+      border: 1px solid rgba(108, 187, 35, 0.3);
     }
 
     .empty {
       margin-top: 18px;
       padding: 24px;
-      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border: 1px dashed rgba(108, 187, 35, 0.15);
       border-radius: var(--radius);
       color: var(--muted);
       background: rgba(255, 255, 255, 0.03);
@@ -185,7 +185,7 @@
     <div>
       <div class="badge"><span class="dot"></span><span>CTA Visuals</span></div>
       <h1 class="title">CTA业绩曲线</h1>
-      <p class="subtitle">集中展示 imgs 文件夹中的净值走势与账户表现图。</p>
+      <p class="subtitle">净值走势与账户表现图。</p>
     </div>
   </header>
 
@@ -193,9 +193,9 @@
     <section class="grid" id="gallery"></section>
     <div class="empty" id="empty" hidden>未发现可展示的图片，请将图像放入 imgs/ 目录。</div>
   </main>
-
-  <footer>由 CTA 图片自动生成，提供轻量查看体验。</footer>
-
+  <footer>
+    数据更新于每个交易日结束后。如有疑问，请联系管理员。
+  </footer>
   <script>
     // 配置要展示的图片文件名
     const images = [
