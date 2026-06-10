@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>随机一言</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #0f766e;
+      --accent-hover: #115e59;
+      --shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 20% 20%, rgba(15, 118, 110, 0.08), transparent 35%),
+                  radial-gradient(circle at 80% 10%, rgba(59, 130, 246, 0.08), transparent 30%),
+                  var(--bg);
+      color: var(--text);
+      font-family: "Noto Serif SC", "Source Han Serif SC", serif;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(720px, 100%);
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 32px);
+    }
+
+    p {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    a {
+      display: block;
+      text-decoration: none;
+      color: #ffffff;
+      background: var(--accent);
+      padding: 12px 14px;
+      border-radius: 10px;
+      transition: background 0.2s ease, transform 0.12s ease;
+    }
+
+    a:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>随机一言</h1>
+    <p>请选择一个页面进入：</p>
+    <ul>
+      <li><a href="./xianwen/index.html">增广贤文 · 随机一言</a></li>
+      <li><a href="./laozi/index.html">道德经 · 随机一章</a></li>
+    </ul>
+  </main>
+</body>
+</html>

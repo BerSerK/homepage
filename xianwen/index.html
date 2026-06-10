@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="随机展示增广贤文中的一句话，每次刷新都会不同。">
+  <title>增广贤文一言</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-start: #f7f3eb;
+      --bg-end: #e1f2ff;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --text: #1f2a44;
+      --accent: #2563eb;
+      --muted: #5b6475;
+      --shadow: 0 18px 40px rgba(28, 51, 84, 0.15);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      background: radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.12), transparent 35%),
+                  radial-gradient(circle at 80% 10%, rgba(244, 114, 182, 0.12), transparent 30%),
+                  linear-gradient(160deg, var(--bg-start), var(--bg-end));
+      color: var(--text);
+      font-family: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+    }
+
+    .page {
+      width: min(960px, 100%);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .title {
+      font-family: 'Space Grotesk', 'Noto Serif SC', serif;
+      font-size: clamp(24px, 3vw, 32px);
+      letter-spacing: 0.6px;
+      margin: 0;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid rgba(37, 99, 235, 0.08);
+      border-radius: 18px;
+      padding: clamp(20px, 4vw, 32px);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(37, 99, 235, 0.1);
+      color: #1d4ed8;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+      font-family: 'Space Grotesk', 'Noto Serif SC', serif;
+    }
+
+    .quote {
+      margin: 18px 0;
+      font-size: clamp(18px, 2.6vw, 22px);
+      line-height: 1.8;
+      white-space: pre-line;
+      animation: fade-in 320ms ease;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    button {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: 'Space Grotesk', 'Noto Serif SC', serif;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 160ms ease;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+    }
+
+    button:hover { transform: translateY(-1px); background: #1d4ed8; }
+    button:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    footer {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1 class="title">增广贤文 · 随机一言</h1>
+      <p class="subtitle">每次刷新都会呈现一条新的提醒，亦可点击按钮换一句。</p>
+    </header>
+
+    <main class="card" aria-live="polite">
+      <span class="badge" id="badge">加载中…</span>
+      <div class="quote" id="quote">正在抓取内容…</div>
+      <div class="meta">
+        <span id="count">共 0 条</span>
+        <div>
+          <button id="refresh" type="button">换一句</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>数据源：同目录下的“增广贤文.txt”，以空行分隔条目</footer>
+  </div>
+
+  <script>
+    (function() {
+      const quoteEl = document.getElementById('quote');
+      const countEl = document.getElementById('count');
+      const badgeEl = document.getElementById('badge');
+      const button = document.getElementById('refresh');
+
+      async function loadRandom() {
+        button.disabled = true;
+        badgeEl.textContent = '加载中…';
+
+        try {
+          const response = await fetch('./增广贤文.txt?cacheBust=' + Date.now());
+          if (!response.ok) {
+            throw new Error('获取文件失败');
+          }
+
+          const text = await response.text();
+          const entries = text
+            .split(/\r?\n\s*\r?\n/g)
+            .map(s => s.trim())
+            .filter(Boolean);
+
+          if (!entries.length) {
+            throw new Error('未找到任何条目');
+          }
+
+          const pick = entries[Math.floor(Math.random() * entries.length)];
+          quoteEl.textContent = pick;
+          countEl.textContent = `共 ${entries.length} 条`;
+          badgeEl.textContent = '今日一读';
+        } catch (err) {
+          console.error(err);
+          quoteEl.textContent = '加载失败，请检查“增广贤文.txt”是否可用。';
+          countEl.textContent = '—';
+          badgeEl.textContent = '出错了';
+        } finally {
+          button.disabled = false;
+        }
+      }
+
+      button.addEventListener('click', loadRandom);
+      loadRandom();
+    })();
+  </script>
+</body>
+</html>

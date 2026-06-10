@@ -124,6 +124,13 @@
       background: #f0f8e9;
     }
 
+    .card .note {
+      padding: 12px 14px 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
     .card .meta {
       position: static;
       display: flex;
@@ -199,8 +206,6 @@
   <script>
     // 配置要展示的图片文件名
     const images = [
-      'nav_plot_account_50001278.png',
-      'nav_plot_account_50006008.png',
       'total_nav_plot.png'
     ];
 
@@ -210,6 +215,10 @@
     const gallery = document.getElementById('gallery');
     const empty = document.getElementById('empty');
 
+    const notes = {
+      'total_nav_plot.png': '备注：本曲线由全部权益绘制，包括期货账户以及现金管理。2026年05月有个大的版本更新。'
+    };
+
     function createCard(src) {
       const card = document.createElement('article');
       card.className = 'card';
@@ -218,6 +227,15 @@
       img.src = `imgs/${src}?v=${cacheBust}`;
       img.alt = src;
       img.loading = 'lazy';
+
+      card.append(img);
+
+      if (notes[src]) {
+        const note = document.createElement('div');
+        note.className = 'note';
+        note.textContent = notes[src];
+        card.append(note);
+      }
 
       const meta = document.createElement('div');
       meta.className = 'meta';
@@ -231,7 +249,7 @@
       pill.textContent = 'PNG';
 
       meta.append(label, pill);
-      card.append(img, meta);
+      card.append(meta);
       return card;
     }
 

@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="随机展示道德经中的一章原文与译文，每次刷新都会不同。">
+  <title>道德经随机一章</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-start: #f4efe4;
+      --bg-end: #d9e9f9;
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --text: #1e2c3f;
+      --accent: #0f766e;
+      --accent-hover: #115e59;
+      --muted: #5e6675;
+      --shadow: 0 18px 40px rgba(24, 48, 74, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      background: radial-gradient(circle at 18% 20%, rgba(15, 118, 110, 0.12), transparent 36%),
+                  radial-gradient(circle at 82% 8%, rgba(59, 130, 246, 0.12), transparent 30%),
+                  linear-gradient(160deg, var(--bg-start), var(--bg-end));
+      color: var(--text);
+      font-family: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+    }
+
+    .page {
+      width: min(960px, 100%);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 32px);
+      letter-spacing: 0.6px;
+      font-family: 'Space Grotesk', 'Noto Serif SC', serif;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid rgba(15, 118, 110, 0.12);
+      border-radius: 18px;
+      padding: clamp(20px, 4vw, 32px);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 118, 110, 0.12);
+      color: #0f766e;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+      font-family: 'Space Grotesk', 'Noto Serif SC', serif;
+    }
+
+    .chapter-title {
+      margin: 14px 0 10px;
+      font-size: clamp(18px, 2.6vw, 24px);
+      color: #0f172a;
+      animation: fade-in 300ms ease;
+    }
+
+    .section-label {
+      margin: 14px 0 8px;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.4px;
+    }
+
+    .content {
+      margin: 0;
+      white-space: pre-line;
+      line-height: 1.9;
+      font-size: clamp(17px, 2.3vw, 21px);
+      animation: fade-in 320ms ease;
+    }
+
+    .translation {
+      font-size: clamp(15px, 2vw, 18px);
+      color: #27364d;
+    }
+
+    .meta {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    button {
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: 'Space Grotesk', 'Noto Serif SC', serif;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 160ms ease;
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.25);
+    }
+
+    button:hover { transform: translateY(-1px); background: var(--accent-hover); }
+    button:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    footer {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1 class="title">道德经 · 随机一章</h1>
+      <p class="subtitle">每次刷新随机展示一章，支持原文与译文对照。</p>
+    </header>
+
+    <main class="card" aria-live="polite">
+      <span class="badge" id="badge">加载中...</span>
+      <h2 class="chapter-title" id="chapterTitle">正在解析章节...</h2>
+
+      <p class="section-label">原文</p>
+      <p class="content" id="originText">正在抓取内容...</p>
+
+      <p class="section-label" id="translationLabel">译文</p>
+      <p class="content translation" id="translationText"></p>
+
+      <div class="meta">
+        <span id="count">共 0 章</span>
+        <button id="refresh" type="button">换一章</button>
+      </div>
+    </main>
+
+    <footer>数据源：同目录下的“道德经全文译文.txt”，按“第X章”标题切分章节</footer>
+  </div>
+
+  <script>
+    (function() {
+      const chapterTitleEl = document.getElementById('chapterTitle');
+      const originTextEl = document.getElementById('originText');
+      const translationTextEl = document.getElementById('translationText');
+      const translationLabelEl = document.getElementById('translationLabel');
+      const countEl = document.getElementById('count');
+      const badgeEl = document.getElementById('badge');
+      const button = document.getElementById('refresh');
+
+      let chapters = [];
+
+      function normalizeText(text) {
+        return text.replace(/\r\n/g, '\n');
+      }
+
+      function formatOriginForDisplay(origin) {
+        return origin
+          .split('\n')
+          .map(line => line.replace(/^\s+/, ''))
+          .join('\n')
+          .replace(/\n{3,}/g, '\n\n')
+          .trim();
+      }
+
+      function parseChapters(rawText) {
+        const text = normalizeText(rawText);
+        const headingRegex = /^\s*第[一二三四五六七八九十百〇零]+章\s*$/gm;
+        const headings = [];
+        let match;
+
+        while ((match = headingRegex.exec(text)) !== null) {
+          headings.push({ title: match[0].trim(), index: match.index });
+        }
+
+        return headings.map((item, idx) => {
+          const start = item.index;
+          const end = idx + 1 < headings.length ? headings[idx + 1].index : text.length;
+          const block = text.slice(start, end).trim();
+
+          const lines = block.split('\n');
+          const title = (lines[0] || '').trim();
+          const body = lines.slice(1).join('\n').trim();
+
+          const parts = body.split(/\n\s*【译文】\s*\n?/);
+          const origin = (parts[0] || '').trim();
+          const translation = (parts[1] || '').trim();
+
+          return { title, origin, translation };
+        }).filter(ch => ch.title && ch.origin);
+      }
+
+      function pickAndRender() {
+        if (!chapters.length) {
+          throw new Error('未解析到章节');
+        }
+
+        const selected = chapters[Math.floor(Math.random() * chapters.length)];
+        chapterTitleEl.textContent = selected.title;
+        originTextEl.textContent = formatOriginForDisplay(selected.origin);
+
+        if (selected.translation) {
+          translationLabelEl.style.display = 'block';
+          translationTextEl.style.display = 'block';
+          translationTextEl.textContent = selected.translation;
+        } else {
+          translationLabelEl.style.display = 'none';
+          translationTextEl.style.display = 'none';
+          translationTextEl.textContent = '';
+        }
+
+        countEl.textContent = `共 ${chapters.length} 章`;
+        badgeEl.textContent = '今日一章';
+      }
+
+      async function loadDataAndRender() {
+        button.disabled = true;
+        badgeEl.textContent = '加载中...';
+
+        try {
+          if (!chapters.length) {
+            const response = await fetch('./道德经全文译文.txt?cacheBust=' + Date.now());
+            if (!response.ok) {
+              throw new Error('获取文件失败');
+            }
+
+            const text = await response.text();
+            chapters = parseChapters(text);
+          }
+
+          pickAndRender();
+        } catch (err) {
+          console.error(err);
+          chapterTitleEl.textContent = '加载失败';
+          originTextEl.textContent = '请检查“道德经全文译文.txt”是否可用，且包含“第X章”标题。';
+          translationLabelEl.style.display = 'none';
+          translationTextEl.style.display = 'none';
+          countEl.textContent = '—';
+          badgeEl.textContent = '出错了';
+        } finally {
+          button.disabled = false;
+        }
+      }
+
+      button.addEventListener('click', loadDataAndRender);
+      loadDataAndRender();
+    })();
+  </script>
+</body>
+</html>
