@@ -9,10 +9,13 @@ LOG_FORMAT="${LOG_FORMAT:-COMBINED}"
 DATE_FORMAT="${DATE_FORMAT:-%d/%b/%Y}"
 TIME_FORMAT="${TIME_FORMAT:-%T}"
 REPORT_TITLE="${REPORT_TITLE:-Nginx Access Report}"
-REAL_TIME_HTML="${REAL_TIME_HTML:-true}"
+REAL_TIME_HTML="${REAL_TIME_HTML:-false}"
 LOG_GLOB="${LOG_GLOB:-access.log*}"
 DECOMPRESS_NICE_LEVEL="${DECOMPRESS_NICE_LEVEL:-15}"
 IONICE_CLASS="${IONICE_CLASS:-3}"
+GOACCESS_NICE_LEVEL="${GOACCESS_NICE_LEVEL:-10}"
+GOACCESS_IONICE_CLASS="${GOACCESS_IONICE_CLASS:-3}"
+NO_GLOBAL_CONFIG="${NO_GLOBAL_CONFIG:-true}"
 MAX_COMPRESSED_FILES="${MAX_COMPRESSED_FILES:-}"
 RUN_WITH_NOHUP="${RUN_WITH_NOHUP:-auto}"
 NOHUP_LOG_FILE="${NOHUP_LOG_FILE:-/tmp/generate_nginx_report.log}"
@@ -51,8 +54,6 @@ if ! command -v goaccess >/dev/null 2>&1; then
 fi
 
 input_files=()
-plain_files=()
-compressed_files=()
 
 if [[ -n "$LOG_FILE" ]]; then
   if [[ ! -f "$LOG_FILE" ]]; then
@@ -68,65 +69,70 @@ else
   fi
 fi
 
-for input_file in "${input_files[@]}"; do
-  case "$input_file" in
-    *.gz)
-      compressed_files+=("$input_file")
-      ;;
-    *)
-      plain_files+=("$input_file")
-      ;;
-  esac
-done
-
 if [[ -n "$MAX_COMPRESSED_FILES" ]]; then
   if ! [[ "$MAX_COMPRESSED_FILES" =~ ^[0-9]+$ ]]; then
     echo "ERROR: MAX_COMPRESSED_FILES must be a non-negative integer." >&2
     exit 1
   fi
 
+  plain_candidates=()
+  compressed_candidates=()
+
+  for input_file in "${input_files[@]}"; do
+    case "$input_file" in
+      *.gz)
+        compressed_candidates+=("$input_file")
+        ;;
+      *)
+        plain_candidates+=("$input_file")
+        ;;
+    esac
+  done
+
   if (( MAX_COMPRESSED_FILES == 0 )); then
-    compressed_files=()
-  elif (( ${#compressed_files[@]} > MAX_COMPRESSED_FILES )); then
-    compressed_files=("${compressed_files[@]: -MAX_COMPRESSED_FILES}")
+    input_files=("${plain_candidates[@]}")
+  elif (( ${#compressed_candidates[@]} > MAX_COMPRESSED_FILES )); then
+    input_files=("${plain_candidates[@]}" "${compressed_candidates[@]: -MAX_COMPRESSED_FILES}")
   fi
 fi
 
 mkdir -p "$(dirname "$OUTPUT_FILE")"
 
-stream_logs() {
-  local input_file
+decompress_cmd=(gzip -cdf --)
+goaccess_cmd=(
+  goaccess -
+  --log-format="$LOG_FORMAT"
+  --date-format="$DATE_FORMAT"
+  --time-format="$TIME_FORMAT"
+  --html-report-title="$REPORT_TITLE"
+  --ignore-crawlers
+  -o "$OUTPUT_FILE"
+)
 
-  for input_file in "${plain_files[@]}"; do
-    cat "$input_file"
-  done
-
-  for input_file in "${compressed_files[@]}"; do
-    if command -v ionice >/dev/null 2>&1; then
-      ionice -c "$IONICE_CLASS" nice -n "$DECOMPRESS_NICE_LEVEL" gzip -dc "$input_file"
-    else
-      nice -n "$DECOMPRESS_NICE_LEVEL" gzip -dc "$input_file"
-    fi
-  done
-}
-
-if [[ "$REAL_TIME_HTML" == "true" ]]; then
-  stream_logs | goaccess - \
-    --log-format="$LOG_FORMAT" \
-    --date-format="$DATE_FORMAT" \
-    --time-format="$TIME_FORMAT" \
-    --html-report-title="$REPORT_TITLE" \
-    --ignore-crawlers \
-    --real-time-html \
-    -o "$OUTPUT_FILE"
-else
-  stream_logs | goaccess - \
-    --log-format="$LOG_FORMAT" \
-    --date-format="$DATE_FORMAT" \
-    --time-format="$TIME_FORMAT" \
-    --html-report-title="$REPORT_TITLE" \
-    --ignore-crawlers \
-    -o "$OUTPUT_FILE"
+if [[ "$NO_GLOBAL_CONFIG" == "true" ]]; then
+  goaccess_cmd+=(--no-global-config)
 fi
 
-echo "Generated $OUTPUT_FILE from $((${#plain_files[@]} + ${#compressed_files[@]})) log file(s)"
+if [[ "$REAL_TIME_HTML" == "true" ]]; then
+  goaccess_cmd+=(--real-time-html)
+fi
+
+run_decompress() {
+  if command -v ionice >/dev/null 2>&1; then
+    ionice -c "$IONICE_CLASS" nice -n "$DECOMPRESS_NICE_LEVEL" "${decompress_cmd[@]}" "$@"
+  else
+    nice -n "$DECOMPRESS_NICE_LEVEL" "${decompress_cmd[@]}" "$@"
+  fi
+}
+
+run_goaccess() {
+  if command -v ionice >/dev/null 2>&1; then
+    ionice -c "$GOACCESS_IONICE_CLASS" nice -n "$GOACCESS_NICE_LEVEL" "${goaccess_cmd[@]}"
+  else
+    nice -n "$GOACCESS_NICE_LEVEL" "${goaccess_cmd[@]}"
+  fi
+}
+
+run_decompress "${input_files[@]}" | run_goaccess
+
+echo "Generated $OUTPUT_FILE from ${#input_files[@]} log file(s)"
